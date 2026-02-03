@@ -4,7 +4,17 @@
 
 Personal-Claw sits between you and financial email sources (accountant, bank, tax office), providing neutral defused summaries via Discord with mandatory human-in-the-loop approval for all replies. The goal is to break the catastrophizing → avoidance → anxiety cycle by removing emotional charge from financial communications.
 
+**Repository:** https://github.com/JMacLulich/personal-claw
+
 ## Core Features
+
+- Monitor Gmail inbox for emails from allowlisted financial contacts
+- Send neutral, defused summaries to Discord using supportive/coaching tone
+- Accept input from single allowlisted Discord user ID only (security)
+- Support both text and voice input (voice transcribed to text)
+- Show draft replies in Discord for review/editing before sending
+- Require explicit two-step approval before actually sending any reply
+- Never auto-send under any circumstances
 
 - Monitor Gmail inbox for emails from allowlisted financial contacts
 - Send neutral, defused summaries to Discord using supportive/coaching tone
@@ -36,7 +46,13 @@ cp .env.example .env
 # Edit .env and fill in required values
 ```
 
-### Required Secrets
+**Repository:** https://github.com/JMacLulich/personal-claw
+
+**OpenClaw:** This project uses the OpenClaw CLI to run the bot. You'll start Personal-Claw by running:
+
+```bash
+openclaw
+```
 
 You'll need to obtain these credentials:
 
@@ -86,9 +102,28 @@ personal-claw/
 
 ## Development
 
-This project uses:
-- **py-cord** (2.6+) - Discord bot framework
-- **google-api-python-client** - Gmail API integration
-- **python-dotenv** - Environment variable management
+This project uses **OpenClaw CLI** to run the bot. You'll start Personal-Claw by running:
+
+```bash
+openclaw
+```
+
+**OpenClaw:** This project uses the OpenClaw CLI to run the bot. You'll start Personal-Claw by running:
+
+```bash
+openclaw
+```
+
+**How They Work Together:**
+- **OpenClaw** provides the CLI environment and context loading for your Personal-Claw configuration
+- **Personal-Claw** reads your intent spec (.claude/INTENT-SPEC-EMAIL.md) and enforces the strict approval gates
+- When you run `openclaw`, it loads the context files and starts the bot
+- The bot processes Gmail and communicates via Discord according to your specifications
+
+**Project Structure:**
+
+- **py-cord** (2.6+) — Discord bot framework
+- **google-api-python-client** — Gmail API integration
+- **python-dotenv** — Environment variable management
 
 All secrets are excluded from git via `.gitignore` (`.env`, `token.json`, `credentials.json`).
