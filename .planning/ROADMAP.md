@@ -32,10 +32,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Discord bot rejects commands from any other Discord user with clear message
   3. Bot connects to Gmail API successfully and can read inbox
   4. Bot runs as system service on N100 box and survives reboots
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 01-01: TBD during phase planning
+- [ ] 01-01-PLAN.md — Project foundation with dependencies and config
+- [ ] 01-02-PLAN.md — Discord bot with user allowlist enforcement
+- [ ] 01-03-PLAN.md — Gmail API integration with OAuth token management
+- [ ] 01-04-PLAN.md — Integration, systemd service, and deployment
 
 ### Phase 2: Email Monitoring
 **Goal**: System watches Gmail inbox and filters by allowlisted senders
