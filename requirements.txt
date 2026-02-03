@@ -1,0 +1,10 @@
+# Discord bot framework
+py-cord>=2.6.0
+
+# Gmail API integration
+google-api-python-client>=2.0.0
+google-auth-oauthlib>=1.0.0
+google-auth-httplib2>=0.2.0
+
+# Configuration management
+python-dotenv>=1.0.0
