@@ -2,7 +2,7 @@
 
 **Anxiety-reduction system for financial communications**
 
-Personal-Claw sits between you and financial email sources (accountant, bank, tax office), providing neutral defused summaries via Discord, and enforces mandatory human-in-the-loop approval for all replies. The goal is to break the catastrophizing → avoidance → anxiety → sleep disruption cycle by removing emotional charge from financial communications.
+Personal-Claw sits between you and financial email sources (accountant, bank, tax office), providing neutral defused summaries via Discord, and enforces mandatory human-in-the-loop approval for all replies. The goal is to break the catastrophizing → avoidance → anxiety cycle by removing emotional charge from financial communications.
 
 **Repository:** https://github.com/JMacLulich/personal-claw
 
@@ -36,57 +36,45 @@ pip install -r requirements.txt
 cp .env.example .env
 
 # Edit .env and fill in required values
-# DISCORD_BOT_TOKEN=<your_token_here>
-# DISCORD_ALLOWLISTED_USER_ID=<your_user_id_here>
 ```
 
 ### Required Secrets
 
-You'll need to obtain these credentials:
-
-**1. Discord Bot Token**
+**1. Discord Bot Token (One-time setup)**
 - Go to https://discord.com/developers/applications
 - Create new application (or use existing one)
 - Go to Bot section
 - Copy token
-- Add to `.env` as `DISCORD_BOT_TOKEN=MTcy4...your_actual_token_here`
+- Add to `.env` as `DISCORD_BOT_TOKEN`
 
 **2. Your Discord User ID (Allowlist)**
 - In Discord, go to User Settings → Advanced
 - Enable Developer Mode
 - Right-click your username → Copy ID
-- Add to `.env` as `DISCORD_ALLOWLISTED_USER_ID=1234567890123456789`
+- Add to `.env` as `DISCORD_ALLOWLISTED_USER_ID`
 
-**3. Gmail OAuth Credentials**
-- Go to https://console.cloud.google.com
+**3. Gmail OAuth Credentials (Fully automatic after first run)**
+- Go to https://console.cloud.google.com/apis/credentials
 - Create a new project (or use existing one)
 - Enable Gmail API (APIs & Services → Enable APIs)
 - Create OAuth 2.0 credentials (Desktop app type)
-- Download as `credentials.json` and save to project root
+- Download as `credentials.json` → save to project root
 - The bot will automatically create `token.json` on first run
 
-### 3. Run the Bot
+### 3. Run Bot
 
 ```bash
 source .venv/bin/activate
-python src/main.py
+python src/bot.py
 ```
 
-First run opens your MacBook's browser for Google OAuth flow. The bot creates `token.json` automatically.
+First run opens your MacBook's browser for OAuth flow. The bot creates `token.json` automatically.
 
-## Deployment Security
+---
 
-How to run OpenClaw safely on your MeLE N100 (headless system):
+## Development
 
 **OpenClaw:** This project uses OpenClaw CLI to run the bot. You'll start Personal-Claw by running:
-
-```bash
-openclaw
-```
-
-**Project Structure:**
-
-This project uses **OpenClaw CLI** to run the bot. You'll start Personal-Claw by running:
 
 ```bash
 openclaw
@@ -102,7 +90,8 @@ personal-claw/
 │   ├── bot.py             # Discord bot
 │   ├── auth.py            # User allowlist enforcement
 │   ├── gmail_client.py     # Gmail API client
-│   └── token_manager.py    # OAuth token management
+│   ├── token_manager.py    # OAuth token management
+│   └── main.py            # (Coming soon)
 ├── .env                   # Your secrets (gitignored)
 ├── .env.example           # Environment variable template
 ├── requirements.txt       # Python dependencies
@@ -130,28 +119,51 @@ All secrets are excluded from git via `.gitignore` (`.env`, `token.json`, `crede
 
 ## Deployment Security
 
-How to run OpenClaw safely on your MeLE N100 (headless system):
+How to run OpenClaw safely on your N100 (headless system):
 
-### Dedicated Sandbox (Rootless Container)
+### Rootless Podman Container
 
-**Rootless Podman:**
-- Run OpenClaw in a rootless container (not a root Docker daemon)
+Run OpenClaw in a rootless container (not a root Docker daemon):
+
 - `--cap-drop=ALL` — Drop all Linux capabilities
 - `--security-opt=no-new-privileges` — No privilege escalation
 - `--read-only` — Container filesystem is read-only (no writes except OpenClaw data volume)
-- `--cap-drop ALL` — Drop all capabilities (no sudo, no raw sockets)
+- `--cap-drop ALL` — Drop all capabilities (no sudo, no raw socket access)
 
-**Tight Network Rules:**
+### Tight Network Rules
+
 - No inbound ports exposed — OpenClaw connects outbound only (Discord, Gmail APIs)
 - Outbound allow only: DNS (53) + HTTPS (443) for Gmail + Discord APIs
 
-**Secrets Hygiene:**
-- Keep tokens/API keys in chmod 600 env file owned by non-root user
+### Secrets Hygiene
+
+- Keep tokens/API keys in chmod 600 env file owned by a non-root user
 - Never bake secrets into images or shell history
-- Least-privilege app permissions:
-  - Mail: start with read + draft only, no auto-send
-  - OpenClaw: disable marketplace/community skills; disable any tools that run shell commands or browse filesystem
-  - Control-plane safety: Discord DM-only (or one private channel) + allowlist your Discord user ID
+
+### Least-Privilege App Permissions
+
+- Mail: start with read + draft only, no auto-send
+- OpenClaw: disable marketplace/community skills; disable any tools that run shell commands or browse filesystem
+
+### Control-Plane Safety
+
+- Discord DM-only (or one private channel) + allowlist your Discord user ID
+- Free-text is fine, but sending email must require explicit confirmation every time
+- Auditability: Keep logs, keep a small state DB, record every "draft created" and "sent" action (with timestamps and thread IDs)
+
+### Hardened Container Configuration
+
+- `--memory=512m` — Limit memory to reduce attack surface
+- `--pids-limit=256` — Process limit reduces DoS risk
+- No host mounts (except a single named volume for OpenClaw's own data)
+- Tight network filtering (only outbound required ports)
+
+### SSH Firewall Rules
+
+- Host firewall: deny inbound by default, allow SSH (especially via Tailscale) first, then lock it down
+- Prefer pinnning SSH allow rules to Tailscale interface (tailscale0) where possible
+- After lockdown: disable inbound SSH except Tailscale interface
+- Outbound allow only: DNS (53) + HTTPS (443) for Gmail + Discord APIs
 
 ### Risk Assessment
 
@@ -161,28 +173,46 @@ If N100 is compromised:
 - **Least Privileges:** No sudo, no raw sockets, no capability escalation
 - **Audit Trail:** All "draft created" and "sent" actions logged
 - **No Inbound Services:** OpenClaw connects outbound only
-- **No Arbitrary Code:** Security-opt prevents new privileges, no shell access to host
 
 If an attacker gets code access:
 - They still can't: Read-only filesystem, no tools inside container
-- They're limited to: OpenClaw APIs only (Gmail read + Discord outbound)
-- Host filesystem access: Read-only mount (no writes)
-- Arbitrary network access: Outbound-only rules
+- They're limited to: OpenClaw APIs only (Gmail read + Discord outbound), no shell access to host
 
 What this protects against:
 - Code execution on N100 (container doesn't have tools)
 - Escalation beyond container (no sudo, no raw sockets)
-- Access to your host system (no host mounts, outbound-only network)
+- Access to your host system (no host mounts, outbound-only network rules)
+
+What you're still responsible for:
+- Your N100 host system (host firewall, SSH access)
+- Keeping N100 software updated and patched
+- Monitoring logs and unusual activity
 
 ### Quick Checklist
 
 Before running `openclaw` on N100:
 - [x] N100 host firewall configured (allow outbound, SSH locked down)
-- [ ] SSH allow rules pinned to Tailscale interface (tailscale0) where possible
-- [ ] Secrets in env file have correct permissions (chmod 600)
-- [ ] OpenClaw marketplace skills disabled
-- [ ] Secrets not hardcoded in any files
-- [ ] Rootless container configured with tight security options
+- [x] SSH allow rules pinned to Tailscale interface (tailscale0) where possible
+- [ ] No unnecessary ports open on N100 host
+- [x] Secrets in env file have correct permissions (chmod 600)
+- [x] OpenClaw marketplace skills disabled (no shell access to host filesystem)
+- [ ] Secrets in env file owned by non-root user (check: `stat -c %u %g ~/.env`)
+- [x] Rootless container configured with tight security options
 
 This setup creates a hardened sandbox for OpenClaw. Even if the container is compromised, attacker options are extremely limited.
 
+## Development
+
+### Run Bot
+
+**Simple run script:**
+```bash
+./scripts/run.sh
+```
+
+This script:
+- Activates your virtual environment (`.venv`)
+- Runs your Personal-Claw bot (`python src/bot.py`)
+- Displays status when done
+
+**That's all you need to run your bot locally!** No complex commands, no tools, just venv activation.
