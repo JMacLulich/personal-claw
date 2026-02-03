@@ -9,18 +9,18 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Email Interception
 
-- [ ] **EMAIL-01**: System monitors Gmail inbox for new emails via Gmail API
+- [x] **EMAIL-01**: System monitors Gmail inbox for new emails via Gmail API
 - [ ] **EMAIL-02**: System filters emails by allowlisted sender addresses/domains only
 - [ ] **EMAIL-03**: System ignores all emails from non-allowlisted senders (security)
 - [ ] **EMAIL-04**: System batches non-urgent emails for scheduled delivery (default behavior)
 - [ ] **EMAIL-05**: System immediately delivers summaries for urgent/time-sensitive emails
 - [ ] **EMAIL-06**: System tracks email status (new, summarized, drafted, awaiting_approval, sent, snoozed)
-- [ ] **EMAIL-07**: User can add/remove allowlisted senders via Discord commands
-- [ ] **EMAIL-08**: System automatically ignores spam and mailing list emails (common patterns detected)
-- [ ] **EMAIL-09**: System detects emails from actual people (criteria: personalized greeting with Jason's name, email structure, sender history, reply-to address is real person, message references shared context)
-- [ ] **EMAIL-10**: System prompts user immediately when detecting potential new contact ("We've identified [name] as someone you know — add to allowed list?")
-- [ ] **EMAIL-11**: System shows summary for potential new contact but blocks reply capability until user approves
-- [ ] **EMAIL-12**: User can decline to add detected person ("No, this is spam") or later add via command ("add [name] to allowed list")
+- [x] **EMAIL-07**: User can add/remove allowlisted senders via Discord commands
+- [x] **EMAIL-08**: System automatically ignores spam and mailing list emails (common patterns detected)
+- [x] **EMAIL-09**: System detects emails from actual people (criteria: personalized greeting with Jason's name, email structure, sender history, reply-to address is real person, message references shared context)
+- [x] **EMAIL-10**: System prompts user immediately when detecting potential new contact ("We've identified [name] as someone you know — add to allowed list?")
+- [x] **EMAIL-11**: System shows summary for potential new contact but blocks reply capability until user approves
+- [x] **EMAIL-12**: User can decline to add detected person ("No, this is spam") or later add via command ("add [name] to allowed list")
 
 ### Neutral Summarization
 
@@ -129,8 +129,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DRAFT-06 | Phase 6 | Pending |
 | DRAFT-07 | Phase 6 | Pending |
 | DRAFT-08 | Phase 6 | Pending |
-| DISC-01 | Phase 6 | Pending |
-| DISC-02 | Phase 1 | Pending |
+ | DISC-01 | Phase 6 | Pending |
+ | DISC-02 | Phase 1 | Complete |
 | DISC-03 | Phase 5 | Pending |
 | DISC-04 | Phase 6 | Pending |
 | DISC-05 | Phase 6 | Pending |

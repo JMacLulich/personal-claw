@@ -12,7 +12,7 @@ Personal-Claw breaks the financial anxiety cycle by intercepting Gmail, deliveri
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Security** - Discord bot + Gmail API + single-user access control
+- [x] **Phase 1: Foundation & Security** - Discord bot + Gmail API + single-user access control
 - [ ] **Phase 2: Email Monitoring** - Watch inbox, filter by allowlist, track email state
 - [ ] **Phase 3: Smart Contact Detection** - Manage allowlist, detect people vs spam, prompt for new contacts
 - [ ] **Phase 4: Batching & Urgency** - Schedule non-urgent emails, deliver urgent summaries immediately
@@ -34,11 +34,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Bot runs as system service on N100 box and survives reboots
 **Plans**: 4 plans
 
-Plans:
+ Plans:
 - [x] 01-01-PLAN.md — Project foundation with dependencies and config ✓ 2026-02-03
-- [ ] 01-02-PLAN.md — Discord bot with user allowlist enforcement
-- [ ] 01-03-PLAN.md — Gmail API integration with OAuth token management
-- [ ] 01-04-PLAN.md — Integration, systemd service, and deployment
+- [x] 01-02-PLAN.md — Discord bot with user allowlist enforcement ✓ 2026-02-03
+- [x] 01-03-PLAN.md — Gmail API integration with OAuth token management ✓ 2026-02-03
+- [x] 01-04-PLAN.md — Integration, systemd service, and deployment ✓ 2026-02-03
 
 ### Phase 2: Email Monitoring
 **Goal**: System watches Gmail inbox and filters by allowlisted senders
