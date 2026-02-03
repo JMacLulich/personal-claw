@@ -14,12 +14,16 @@ import discord
 from discord.ext import commands
 
 from src.auth import check_allowlisted_user
+from src.claw import PersonalClaw
 from src.config import load_config
 
 
-def create_bot() -> discord.Bot:
+def create_bot(claw: PersonalClaw) -> discord.Bot:
     """
     Create and configure the Discord bot instance.
+    
+    Args:
+        claw: PersonalClaw orchestrator instance
     
     Returns bot with global allowlist check and commands registered.
     """
@@ -81,16 +85,57 @@ def create_bot() -> discord.Bot:
         """
         await ctx.respond("Pong! You're authorized. 🎯")
     
+    @bot.command(name="check-inbox", description="Check your Gmail inbox")
+    async def check_inbox(ctx: commands.Context):
+        """
+        Check Gmail inbox and return summary.
+        
+        Calls PersonalClaw orchestrator which handles Gmail API interaction
+        and formats the response. Protected by global allowlist check.
+        """
+        # Defer response since Gmail API call may take a moment
+        await ctx.defer()
+        
+        # Get inbox summary from PersonalClaw
+        summary = await claw.check_inbox()
+        
+        # Send formatted response
+        await ctx.respond(summary)
+    
+    @bot.command(name="status", description="Check bot and inbox status")
+    async def status(ctx: commands.Context):
+        """
+        Show bot health status and current inbox count.
+        
+        Provides quick status check without full inbox summary.
+        Protected by global allowlist check.
+        """
+        # Get message count from PersonalClaw
+        message_count = claw.get_message_count()
+        
+        # Format friendly status message
+        if message_count == 0:
+            status_msg = "✅ Personal-Claw is running. Your inbox is empty!"
+        elif message_count == 1:
+            status_msg = "✅ Personal-Claw is running. You have 1 message in your inbox."
+        else:
+            status_msg = f"✅ Personal-Claw is running. You have {message_count} messages in your inbox."
+        
+        await ctx.respond(status_msg)
+    
     return bot
 
 
 def main():
-    """Main entry point: load config and start bot."""
+    """Main entry point: load config, create PersonalClaw, and start bot."""
     config = load_config()
     print(f"Starting bot with allowlisted user ID: {config.discord_allowlisted_user_id}")
     
-    # Create bot instance when running (not at import time)
-    bot = create_bot()
+    # Create PersonalClaw orchestrator
+    claw = PersonalClaw(config)
+    
+    # Create bot instance with PersonalClaw integration
+    bot = create_bot(claw)
     bot.run(config.discord_bot_token)
 
 
