@@ -103,46 +103,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EMAIL-01 | TBD | Pending |
-| EMAIL-02 | TBD | Pending |
-| EMAIL-03 | TBD | Pending |
-| EMAIL-04 | TBD | Pending |
-| EMAIL-05 | TBD | Pending |
-| EMAIL-06 | TBD | Pending |
-| EMAIL-07 | TBD | Pending |
-| EMAIL-08 | TBD | Pending |
-| EMAIL-09 | TBD | Pending |
-| EMAIL-10 | TBD | Pending |
-| EMAIL-11 | TBD | Pending |
-| EMAIL-12 | TBD | Pending |
-| SUMM-01 | TBD | Pending |
-| SUMM-02 | TBD | Pending |
-| SUMM-03 | TBD | Pending |
-| SUMM-04 | TBD | Pending |
-| SUMM-05 | TBD | Pending |
-| SUMM-06 | TBD | Pending |
-| DRAFT-01 | TBD | Pending |
-| DRAFT-02 | TBD | Pending |
-| DRAFT-03 | TBD | Pending |
-| DRAFT-04 | TBD | Pending |
-| DRAFT-05 | TBD | Pending |
-| DRAFT-06 | TBD | Pending |
-| DRAFT-07 | TBD | Pending |
-| DRAFT-08 | TBD | Pending |
-| DISC-01 | TBD | Pending |
-| DISC-02 | TBD | Pending |
-| DISC-03 | TBD | Pending |
-| DISC-04 | TBD | Pending |
-| DISC-05 | TBD | Pending |
-| DISC-06 | TBD | Pending |
-| AVOID-01 | TBD | Pending |
-| AVOID-02 | TBD | Pending |
-| AVOID-03 | TBD | Pending |
+| EMAIL-01 | Phase 2 | Pending |
+| EMAIL-02 | Phase 2 | Pending |
+| EMAIL-03 | Phase 2 | Pending |
+| EMAIL-04 | Phase 4 | Pending |
+| EMAIL-05 | Phase 4 | Pending |
+| EMAIL-06 | Phase 2 | Pending |
+| EMAIL-07 | Phase 3 | Pending |
+| EMAIL-08 | Phase 3 | Pending |
+| EMAIL-09 | Phase 3 | Pending |
+| EMAIL-10 | Phase 3 | Pending |
+| EMAIL-11 | Phase 3 | Pending |
+| EMAIL-12 | Phase 3 | Pending |
+| SUMM-01 | Phase 5 | Pending |
+| SUMM-02 | Phase 5 | Pending |
+| SUMM-03 | Phase 5 | Pending |
+| SUMM-04 | Phase 5 | Pending |
+| SUMM-05 | Phase 5 | Pending |
+| SUMM-06 | Phase 5 | Pending |
+| DRAFT-01 | Phase 6 | Pending |
+| DRAFT-02 | Phase 6 | Pending |
+| DRAFT-03 | Phase 7 | Pending |
+| DRAFT-04 | Phase 7 | Pending |
+| DRAFT-05 | Phase 7 | Pending |
+| DRAFT-06 | Phase 6 | Pending |
+| DRAFT-07 | Phase 6 | Pending |
+| DRAFT-08 | Phase 6 | Pending |
+| DISC-01 | Phase 6 | Pending |
+| DISC-02 | Phase 1 | Pending |
+| DISC-03 | Phase 5 | Pending |
+| DISC-04 | Phase 6 | Pending |
+| DISC-05 | Phase 6 | Pending |
+| DISC-06 | Phase 6 | Pending |
+| AVOID-01 | Phase 8 | Pending |
+| AVOID-02 | Phase 8 | Pending |
+| AVOID-03 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 35 total
-- Mapped to phases: 0 (awaiting roadmap)
-- Unmapped: 35 ⚠️
+- Mapped to phases: 35 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2025-02-02*
