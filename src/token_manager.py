@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -78,12 +78,17 @@ class TokenManager:
                     str(self.credentials_path), self.SCOPES
                 )
                 # Run local server flow (opens browser for authorization)
-                creds = flow.run_local_server(port=0)
+                # Cast is safe: run_local_server always returns oauth2.credentials.Credentials
+                creds = cast(Credentials, flow.run_local_server(port=0))
                 print("OAuth flow completed successfully")
             
+            # Type assertion: creds is not None at this point (either refreshed or newly obtained)
+            assert creds is not None, "Credentials must be available after refresh or OAuth flow"
             # Save the credentials for the next run
             self._save_token(creds)
         
+        # Type assertion: at this point creds must be valid (either loaded, refreshed, or newly obtained)
+        assert creds is not None and creds.valid, "Failed to obtain valid credentials"
         return creds
     
     def _save_token(self, creds: Credentials) -> None:
