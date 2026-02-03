@@ -1,0 +1,19 @@
+[Unit]
+Description=Personal-Claw Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jason
+WorkingDirectory=/home/jason/personal-claw
+Environment="PATH=/home/jason/personal-claw/.venv/bin:/usr/bin"
+EnvironmentFile=/home/jason/personal-claw/.env
+ExecStart=/home/jason/personal-claw/.venv/bin/python src/bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
