@@ -74,7 +74,17 @@ python src/main.py
 
 First run opens your MacBook's browser for Google OAuth flow. The bot creates `token.json` automatically.
 
-## Development
+## Deployment Security
+
+How to run OpenClaw safely on your MeLE N100 (headless system):
+
+**OpenClaw:** This project uses OpenClaw CLI to run the bot. You'll start Personal-Claw by running:
+
+```bash
+openclaw
+```
+
+**Project Structure:**
 
 This project uses **OpenClaw CLI** to run the bot. You'll start Personal-Claw by running:
 
