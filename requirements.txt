@@ -1,5 +1,6 @@
 # Discord bot framework
 py-cord>=2.6.0
+audioop-lts>=0.2.0  # Required for py-cord on Python 3.13+
 
 # Gmail API integration
 google-api-python-client>=2.0.0
