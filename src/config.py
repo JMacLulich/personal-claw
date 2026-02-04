@@ -2,7 +2,6 @@
 
 import os
 from dataclasses import dataclass
-from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -70,6 +69,25 @@ def load_config() -> Config:
     return Config(
         discord_bot_token=discord_token,
         discord_allowlisted_user_id=user_id,
+        gmail_credentials_path=gmail_creds,
+        gmail_token_path=gmail_token,
+    )
+
+
+@dataclass
+class GmailConfig:
+    """Gmail-only configuration for OAuth tooling."""
+
+    gmail_credentials_path: str = "credentials.json"
+    gmail_token_path: str = "token.json"
+
+
+def load_gmail_config() -> GmailConfig:
+    """Load Gmail configuration without requiring Discord secrets."""
+    load_dotenv()
+    gmail_creds = os.getenv("GMAIL_CREDENTIALS_PATH", "credentials.json")
+    gmail_token = os.getenv("GMAIL_TOKEN_PATH", "token.json")
+    return GmailConfig(
         gmail_credentials_path=gmail_creds,
         gmail_token_path=gmail_token,
     )

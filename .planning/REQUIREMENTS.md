@@ -28,7 +28,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SUMM-02**: System extracts key information (sender, subject, action needed, deadline if stated)
 - [ ] **SUMM-03**: System sends summary to Discord in clear formatted message
 - [ ] **SUMM-04**: System defuses triggering language (rewrites "urgent" as "routine", removes panic framing)
-- [ ] **SUMM-05**: System uses supportive/coaching tone ("you've done well before" framing, not clinical)
+- [ ] **SUMM-05**: System uses supportive/coaching tone with a nurturing, more feminine voice ("you've done well before" framing, not clinical)
 - [ ] **SUMM-06**: System provides context-aware framing ("this was a big expense month" context when relevant)
 
 ### Reply Drafting & Approval

@@ -61,6 +61,15 @@ cp .env.example .env
 - Download as `credentials.json` → save to project root
 - The bot will automatically create `token.json` on first run
 
+### Basic Auth Tooling (Token Setup)
+
+1. Copy `.env.example` to `.env` and set Gmail paths if you want non-default locations
+2. Download `credentials.json` from Google Cloud and place it in the project root
+3. Run `./scripts/bootstrap.sh` to create `token.json`
+4. To reset Gmail auth, delete `token.json` and run the script again
+
+Note: OpenClaw will also prompt for tokens if they are missing. Discord tokens are only required when you run the bot.
+
 ### 3. Run Bot
 
 ```bash
@@ -200,19 +209,3 @@ Before running `openclaw` on N100:
 - [x] Rootless container configured with tight security options
 
 This setup creates a hardened sandbox for OpenClaw. Even if the container is compromised, attacker options are extremely limited.
-
-## Development
-
-### Run Bot
-
-**Simple run script:**
-```bash
-./scripts/run.sh
-```
-
-This script:
-- Activates your virtual environment (`.venv`)
-- Runs your Personal-Claw bot (`python src/bot.py`)
-- Displays status when done
-
-**That's all you need to run your bot locally!** No complex commands, no tools, just venv activation.

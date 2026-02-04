@@ -87,7 +87,7 @@ The email workflow establishes the pattern: **neutral buffering + supportive coa
 - **Voice**: Must support voice input as first-class (Jason often drives/walks when checking)
 - **Deployment**: Runs on N100 box — must survive reboots, run as system service
 - **Email sources**: Allowlisted senders only (accountant, bank, tax office, etc.)
-- **Tone**: Supportive/coaching (not clinical, not patronizing)
+- **Tone**: Supportive/coaching, nurturing, more feminine than masculine (not clinical, not patronizing)
 
 ## Key Decisions
 
@@ -98,6 +98,7 @@ The email workflow establishes the pattern: **neutral buffering + supportive coa
 | Urgent emails break through batching | Critical/time-sensitive items can't wait; prevents real issues from being missed | — Pending |
 | Two-step approval (send → confirm) | Prevents accidental sends; gives Jason time to reconsider; supports voice input safely | — Pending |
 | Neutral tone without explicit defusing | Rewrite facts neutrally rather than calling out scary language; avoids patronizing "don't worry" framing | — Pending |
+| Feminine, nurturing voice | Personal AI voice should feel more feminine and nurturing while staying calm and respectful | — Pending |
 | Voice = text (same safety rules) | Prevents voice from bypassing safety gates; keeps mental model simple; no special privileges | — Pending |
 | Gentle avoidance surfacing (24hr) | Supports Jason's awareness without being pushy; acknowledges procrastination without judgment | — Pending |
 | Vague snooze timing allowed | Reduces decision fatigue; OpenClaw can ask for specifics or default sensibly; matches conversational style | — Pending |

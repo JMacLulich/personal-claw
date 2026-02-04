@@ -1,124 +1,102 @@
-"""OAuth token management for Gmail API.
-
-Handles token lifecycle: initial OAuth flow, storage, expiry checking, and automatic refresh.
-"""
-from __future__ import annotations
+"""OAuth token management for Gmail."""
 
 import json
-import os
+import logging
 from pathlib import Path
-from typing import Any, cast
+from typing import Sequence, cast
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+GMAIL_READONLY_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
+
+logger = logging.getLogger(__name__)
+
 
 class TokenManager:
-    """Manages OAuth tokens for Gmail API with automatic refresh.
-    
-    Handles:
-    - Initial OAuth flow for new tokens
-    - Token persistence to disk
-    - Expiry detection and automatic refresh
-    - Health checks for proactive monitoring
-    
-    Scopes: Read-only access to Gmail (gmail.readonly) for Phase 1.
-    """
-    
-    # Read-only scope for Phase 1 - send capability comes later
-    SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-    
+    """Manages Gmail OAuth2 tokens with automatic refresh and persistence."""
+
     def __init__(self, credentials_path: str, token_path: str) -> None:
-        """Initialize token manager with file paths.
-        
-        Args:
-            credentials_path: Path to credentials.json (OAuth client ID from Google Cloud Console)
-            token_path: Path to token.json (stored access/refresh tokens)
-        """
         self.credentials_path = Path(credentials_path)
         self.token_path = Path(token_path)
-        
-        # Validate credentials file exists
+
+    def get_credentials(self, scopes: Sequence[str] | None = None) -> Credentials:
+        """Load credentials or run OAuth flow, then persist token.
+
+        Args:
+            scopes: OAuth scopes to request. Defaults to Gmail read-only.
+
+        Returns:
+            Credentials: Valid Gmail OAuth credentials.
+
+        Raises:
+            FileNotFoundError: If credentials.json is missing.
+        """
         if not self.credentials_path.exists():
             raise FileNotFoundError(
-                f"Credentials file not found: {credentials_path}\n"
-                "Download credentials.json from Google Cloud Console:\n"
-                "1. Go to https://console.cloud.google.com/apis/credentials\n"
-                "2. Create OAuth 2.0 Client ID (Desktop app)\n"
-                "3. Download JSON and save as credentials.json"
+                f"Missing OAuth credentials file: {self.credentials_path}. "
+                "Download credentials.json from Google Cloud Console."
             )
-    
-    def get_credentials(self) -> Credentials:
-        """Get valid credentials, refreshing if needed or running OAuth flow if not found.
-        
-        Returns:
-            Valid OAuth2 credentials for Gmail API
-            
-        Raises:
-            Exception: If OAuth flow fails or refresh fails
-        """
-        creds: Credentials | None = None
-        
-        # Load existing token if available
-        if self.token_path.exists():
-            creds = Credentials.from_authorized_user_file(str(self.token_path), self.SCOPES)
-        
-        # If no valid credentials available, get new ones
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                # Token expired but we have refresh token - refresh it
-                print("Token expired, refreshing...")
-                creds.refresh(Request())
-                print("Token refreshed successfully")
-            else:
-                # No token or no refresh token - run OAuth flow
-                print("No valid token found, starting OAuth flow...")
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    str(self.credentials_path), self.SCOPES
-                )
-                # Run local server flow (opens browser for authorization)
-                # Cast is safe: run_local_server always returns oauth2.credentials.Credentials
-                creds = cast(Credentials, flow.run_local_server(port=0))
-                print("OAuth flow completed successfully")
-            
-            # Type assertion: creds is not None at this point (either refreshed or newly obtained)
-            assert creds is not None, "Credentials must be available after refresh or OAuth flow"
-            # Save the credentials for the next run
-            self._save_token(creds)
-        
-        # Type assertion: at this point creds must be valid (either loaded, refreshed, or newly obtained)
-        assert creds is not None and creds.valid, "Failed to obtain valid credentials"
+
+        scopes = list(scopes or [GMAIL_READONLY_SCOPE])
+
+        creds = self._load_token(scopes)
+        if creds and creds.valid:
+            return creds
+
+        if creds and creds.expired and creds.refresh_token:
+            logger.info("Refreshing expired Gmail token")
+            creds.refresh(Request())
+            refreshed = cast(Credentials, creds)
+            self._save_token(refreshed)
+            return refreshed
+
+        logger.info("Starting Gmail OAuth flow")
+        flow = InstalledAppFlow.from_client_secrets_file(
+            str(self.credentials_path),
+            scopes=scopes,
+        )
+        creds = cast(Credentials, flow.run_local_server(port=0))
+        self._save_token(creds)
         return creds
-    
-    def _save_token(self, creds: Credentials) -> None:
-        """Save credentials to token file.
-        
-        Args:
-            creds: OAuth2 credentials to save
-        """
-        # Ensure token directory exists
-        self.token_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        # Save credentials to JSON file
-        with open(self.token_path, 'w') as token_file:
-            token_file.write(creds.to_json())
-        
-        print(f"Token saved to {self.token_path}")
-    
-    def health_check(self) -> bool:
-        """Check if credentials are valid without triggering refresh.
-        
-        Returns:
-            True if credentials are valid and not expired, False otherwise
-        """
+
+    def _load_token(self, scopes: Sequence[str]) -> Credentials | None:
         if not self.token_path.exists():
-            return False
-        
+            return None
+
         try:
-            creds = Credentials.from_authorized_user_file(str(self.token_path), self.SCOPES)
-            # Check if credentials exist and are valid (not expired)
-            return creds and creds.valid
-        except Exception:
-            # Any error reading/parsing token = not healthy
-            return False
+            creds = Credentials.from_authorized_user_file(str(self.token_path), scopes=scopes)
+            return cast(Credentials, creds)
+        except (ValueError, json.JSONDecodeError) as exc:
+            logger.warning("Invalid token.json, re-auth required: %s", exc)
+            return None
+
+    def _save_token(self, creds: Credentials) -> None:
+        self._ensure_token_dir()
+        token_data = {
+            "token": creds.token,
+            "refresh_token": creds.refresh_token,
+            "token_uri": creds.token_uri,
+            "client_id": creds.client_id,
+            "client_secret": creds.client_secret,
+            "scopes": creds.scopes,
+        }
+        self.token_path.write_text(json.dumps(token_data, indent=2))
+        logger.info("Token saved to %s", self.token_path)
+
+    def _ensure_token_dir(self) -> None:
+        if self.token_path.parent == Path("."):
+            return
+        self.token_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def health_check(self) -> tuple[bool, str]:
+        try:
+            creds = self.get_credentials()
+            if creds.expired:
+                return False, "Token expired"
+            return True, "Credentials valid"
+        except FileNotFoundError:
+            return False, "Credentials file not found"
+        except Exception as exc:  # pragma: no cover - defensive
+            return False, f"Health check error: {exc}"

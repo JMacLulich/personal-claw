@@ -12,7 +12,6 @@ Clean separation of concerns:
 
 from __future__ import annotations
 
-from typing import Any
 
 from googleapiclient.errors import HttpError
 

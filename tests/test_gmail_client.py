@@ -43,7 +43,7 @@ class TestGmailClient(unittest.TestCase):
     
     def test_init(self) -> None:
         """Test GmailClient initialization."""
-        client = GmailClient(self.config)
+        GmailClient(self.config)
         
         # Should create TokenManager with correct paths
         self.mock_token_manager_class.assert_called_once_with(

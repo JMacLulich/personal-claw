@@ -12,7 +12,7 @@ Personal-Claw breaks the financial anxiety cycle by intercepting Gmail, deliveri
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Foundation & Security** - Discord bot + Gmail API + single-user access control
+- [ ] **Phase 1: Foundation & Security** - Discord bot + Gmail API + single-user access control
 - [ ] **Phase 2: Email Monitoring** - Watch inbox, filter by allowlist, track email state
 - [ ] **Phase 3: Smart Contact Detection** - Manage allowlist, detect people vs spam, prompt for new contacts
 - [ ] **Phase 4: Batching & Urgency** - Schedule non-urgent emails, deliver urgent summaries immediately
@@ -32,13 +32,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Discord bot rejects commands from any other Discord user with clear message
   3. Bot connects to Gmail API successfully and can read inbox
   4. Bot runs as system service on N100 box and survives reboots
-**Plans**: 4 plans
+**Plans**: 5 plans
 
  Plans:
 - [x] 01-01-PLAN.md — Project foundation with dependencies and config ✓ 2026-02-03
 - [x] 01-02-PLAN.md — Discord bot with user allowlist enforcement ✓ 2026-02-03
 - [x] 01-03-PLAN.md — Gmail API integration with OAuth token management ✓ 2026-02-03
-- [x] 01-04-PLAN.md — Integration, systemd service, and deployment ✓ 2026-02-03
+- [ ] 01-04-PLAN.md — Basic auth tooling (Gmail OAuth + Discord token storage)
+- [ ] 01-05-PLAN.md — Integration, systemd service, and deployment (deferred until token tooling validated)
 
 ### Phase 2: Email Monitoring
 **Goal**: System watches Gmail inbox and filters by allowlisted senders
@@ -86,7 +87,7 @@ Plans:
 - [ ] 04-01: TBD during phase planning
 
 ### Phase 5: Neutral Summarization
-**Goal**: System generates calm, defused summaries with supportive coaching tone
+**Goal**: System generates calm, defused summaries with supportive coaching tone and a nurturing, more feminine voice
 **Depends on**: Phase 4
 **Requirements**: SUMM-01, SUMM-02, SUMM-03, SUMM-04, SUMM-05, SUMM-06, DISC-03
 **Success Criteria** (what must be TRUE):
@@ -94,7 +95,7 @@ Plans:
   2. Summaries extract key information (sender, subject, action needed, deadline)
   3. Summaries appear in Discord as clear formatted messages
   4. System rewrites "urgent" as "routine" and removes panic framing from original emails
-  5. Summaries use supportive/coaching tone ("you've handled this before" framing)
+  5. Summaries use supportive/coaching tone with a nurturing, more feminine voice ("you've handled this before" framing)
   6. System provides context-aware framing when relevant ("big expense month" context)
 **Plans**: TBD
 
@@ -154,7 +155,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Security | 1/4 | In progress | - |
+| 1. Foundation & Security | 3/5 | In progress | - |
 | 2. Email Monitoring | 0/TBD | Not started | - |
 | 3. Smart Contact Detection | 0/TBD | Not started | - |
 | 4. Batching & Urgency | 0/TBD | Not started | - |

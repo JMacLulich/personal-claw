@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2025-02-02)
 
 **Core value:** Financial emails can be read and processed without triggering anxiety spirals. The system must never auto-send replies — human approval is mandatory.
-**Current focus:** Phase 1 - Foundation & Security
+**Current focus:** Phase 1 - Foundation & Security (token tooling)
 
 ## Current Position
 
 Phase: 1 of 8 (Foundation & Security)
-Plan: 4 of 4 complete
-Status: Ready to execute
-Last activity: 2026-02-03 — Phase 1 planning complete
+Plan: 3 of 5 complete (next: 01-04 tooling)
+Status: Regrouped; focus on token setup only
+Last activity: 2026-02-03 — State rebuilt from roadmap + completed summaries
 
-Progress: [████████] 100% (4/4 plans in Phase 1)
+Progress: [██████░░] 60% (3/5 plans in Phase 1)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 3
 - Average duration: 3 min
 - Total execution time: 0.15 hours
 
@@ -66,7 +66,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- 01-05 integration is deferred until token tooling is validated (OAuth + Discord .env).
 
 ### Blockers/Concerns
 
